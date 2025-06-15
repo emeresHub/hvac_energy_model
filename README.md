@@ -26,6 +26,7 @@ based on building parameters plus time-series inputs such as outdoor weather and
 
 ## 🗂 Project Structure
 
+```markdown
 hvac_energy_model/
 ├─ data/ # input CSVs & saved result files
 │
@@ -35,7 +36,7 @@ hvac_energy_model/
 │ └─ simulate.py # time-march driver (Euler v-1)
 │
 └─ run.py # convenience script to launch a run
-
+```
 
 
 ---
