@@ -28,30 +28,67 @@ based on building parameters plus time-series inputs such as outdoor weather and
 
 ```markdown
 hvac_energy_model/
-├─ data/ # input CSVs & saved result files
+├─ hvac_sim/              # core simulation package
+│   ├─ parameters.py      # all physical constants & defaults
+│   ├─ physics.py         # 3R-2C heat + CO₂ ODEs
+│   └─ simulator.py        # time-march driver (Euler v-1)
 │
-├─ hvac_sim/ # core simulation package
-│ ├─ parameters.py # all physical constants & defaults
-│ ├─ physics.py # 3R-2C heat + CO₂ ODEs
-│ └─ simulate.py # time-march driver (Euler v-1)
-│
-└─ run.py # convenience script to launch a run
+├─ mqtt_integration/      # MQTT client and integration code
+├─ .gitignore
+├─ dashboard.py           # Dash web dashboard
+├─ local.env              # environment variables for config
+├─ mosquitto.conf         # MQTT broker config
+├─ publisher_test.py      # interactive MQTT sensor data publisher
+├─ README.md
+├─ requirements.txt
 ```
 
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1 · Install requirements
 
 ```bash
-pip install numpy pandas
+pip install -r requirements.txt
 ```
 
-### 2 · Run a 24-hour synthetic demo
+### 2 · Start the MQTT broker (if needed)
+
+If you haven’t already got Mosquitto or another MQTT broker running locally, start it up:
+
 ```bash
-python run.py
+# Example for Mosquitto (Docker, port 1883)
+docker run -d --name mosquitto -p 1883:1883 -v "$PWD/mosquitto.conf:/mosquitto/config/mosquitto.conf" eclipse-mosquitto
 ```
-The script prints the first few rows to the console and writes a full
-data/results/synthetic_run_results.csv.
+
+### 3 · Start the interactive publisher
+
+Open a new terminal:
+
+```bash
+python publisher_test.py
+```
+
+This will begin publishing random sensor data and will **listen for target temperature setpoints** from the dashboard UI.
+
+### 4 · Run the live dashboard
+
+Open another terminal:
+
+```bash
+python dashboard.py
+```
+
+This starts a web server.
+Go to [http://127.0.0.1:8050](http://127.0.0.1:8050) in your browser.
+
+### 5 · Use the Dashboard
+
+* View live simulation data and KPIs.
+* Adjust the target temperature using the slider and “Update Setpoint” button.
+* The dashboard and publisher communicate via MQTT in real time.
+
+---
+
