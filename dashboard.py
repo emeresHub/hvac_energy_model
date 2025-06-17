@@ -48,6 +48,7 @@ def on_sensor_data_received(msg_dict):
         # Add a timestamp and store the new data point
         results['timestamp'] = pd.to_datetime('now')
         results['N_occ'] = n_occ  # Add number of people
+        results['T_set'] = float(msg_dict["T_set"])  # Store setpoint with results!
         with lock:
             data_deque.append(results)
             
@@ -150,12 +151,13 @@ def update_graph_live(n):
     total_energy_kwh = latest_data['E_KWh_cumulative']
     total_energy_words = num2words(round(total_energy_kwh, 1))
     n_people = latest_data.get('N_occ', 'N/A')
+    current_setpoint = latest_data.get('T_set', 'N/A')
 
-    # Create KPI text block
-        # Create KPI text block with People section separated
+    # KPI text block with Setpoint line
     kpi_text = html.Div([
         html.H4("Current State"),
         html.P(f"Zone Temp: {latest_data['T_z']:.1f} °C"),
+        html.P(f"Setpoint: {current_setpoint:.1f} °C"),   # <-- Current setpoint!
         html.P(f"CO₂ Level: {latest_data['CO2_z']:.0f} ppm"),
         html.P(f"Power Draw: {latest_data['P_e']:.2f} kW"),
         html.Hr(style={"borderTop": "1px solid #eee"}),
@@ -176,7 +178,6 @@ def update_graph_live(n):
         html.P(f"({total_energy_words} kilowatt-hours)")
     ])
 
-    
     return fig, kpi_text
 
 @app.callback(
@@ -208,4 +209,3 @@ if __name__ == '__main__':
     
     # Start the Dash web server
     app.run(host="0.0.0.0", port=8050, debug=True)
-
