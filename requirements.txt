@@ -1,0 +1,7 @@
+dash==3.0.4
+num2words==0.5.14
+numpy==2.3.0
+paho_mqtt==1.6.1
+pandas==2.3.0
+plotly==6.1.2
+python-dotenv==1.1.0

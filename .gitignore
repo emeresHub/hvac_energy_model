@@ -1,0 +1,17 @@
+# Python Virtual Environments
+venv/
+.venv/
+env/
+
+# Python Bytecode & Distribution
+__pycache__/
+*.pyc
+build/
+dist/
+
+# Sensitive Information (API keys, passwords)
+.env
+*.env
+
+# IDE & Editor Config
+.vscode/
